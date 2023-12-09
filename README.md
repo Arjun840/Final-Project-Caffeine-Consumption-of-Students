@@ -1,2 +1,3 @@
 # Final-Project-Caffeine-Consumption-of-Students
-Final Project for group AE-6
+  This is the final Project for group AE-6. Our story was made for the audience of students and primarily college students. Caffeine consumption is so normalized in our generation that many people forget it can have negative health consequences. We wanted to look at the demographics of students consuming coffee, and find out the effects it has on them and their motivations to keep consuming caffine. Below we have a graph from our merged dataset that displays the percentage of students that consume x amounts of different types of coffee.
+<img width="655" alt="Screenshot 2023-12-08 at 4 37 01 PM" src="https://github.com/Arjun840/Final-Project-Caffeine-Consumption-of-Students/assets/87104854/21cee325-ee08-4fd1-b85f-d3b3ece99d90">
