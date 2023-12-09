@@ -1,0 +1,192 @@
+---
+title: "Final-Project"
+author: "Arjun, Joe, Reem, Pooja, Micha"
+date: "2023-12-04"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(rvest)
+```
+
+
+```{r}
+library(readxl)
+caffeine_dataset_1 <- read_excel("Documents/caffeine dataset 1.xlsx", 
+    sheet = "Sheet2")
+caffeine_dataset_1
+ 
+```
+
+
+```{r}
+library(readxl)
+caffeine_dataset_2 <- read_excel("Documents/caffeine dataset 2.xlsx", 
+    sheet = "Sheet2")
+caffeine_dataset_2
+```
+
+
+```{r}
+caffeine_dataset_2_longer <- caffeine_dataset_2 %>%
+  pivot_longer(c(`8 to 12`, `13 to 17`, `Over 18`, `Under 8`),
+               names_to="Age",
+               values_to="Count_Caffeine")
+caffeine_dataset_2_longer 
+```
+
+
+```{r}
+caffeine_dataset_1 %>%
+  ggplot(aes(x = Age, y = `Caffeine Consumption`)) +
+  geom_bar(stat = "identity", fill = "blue", width = 0.5) +
+  labs(title = "Caffeine Consumption by Age",
+       x = "Age",
+       y = "Caffeine Consumption") +
+  annotate("text", x = Inf, y = Inf, hjust = 1, vjust = 1, 
+           label = paste("Total Participants: 467 "),
+           size = 4, color = "darkblue") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1))
+```
+
+
+```{r}
+ggplot(caffeine_dataset_2_longer, aes(x = Parameter, y = Count_Caffeine, fill = Age)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7) , color = "black", size = 0.7) +
+  labs(title = "Caffeine Consumption by Parameter and Age Group",
+       x = "Parameter",
+       y = "Count of Caffeine") +
+  scale_fill_manual(values = c('13 to 17' = 'blue', 'Over 18' = 'red')) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+```{r}
+library(readxl)
+caffeine_dataset_5 <- read_excel("Documents/caffeine dataset 5.xlsx")
+caffeine_dataset_5
+caffeine_dataset_5 %>% 
+  ggplot(aes(Reason, Percent))+
+  geom_col(color = "navy", fill="lavender")
+
+
+```
+
+
+
+```{r}
+library(readxl)
+caffeine_dataset_3 <- read_excel("Documents/caffeine dataset 3.xlsx") 
+caffeine_dataset_3_clean <- caffeine_dataset_3 %>% 
+  select(Frequency, Amount, Sources, `N%...10`)
+caffeine_dataset_3_clean
+```
+
+
+```{r}
+caffeine_dataset_3_clean %>%
+  ggplot(aes(Frequency, Amount))+
+  geom_col(fill = "lightblue", col ="pink")+
+  labs(title="Caffeine Consumption Frequency vs. Amount of People")
+
+```
+
+
+
+```{r}
+caffeine_dataset_3_clean %>% 
+  drop_na(Sources) %>% 
+  ggplot(aes(Sources, `N%...10`))+
+  geom_col(fill = "brown", col ="pink")+
+  labs(title="Caffeine Consumption Sources", y="Frequency")
+```
+
+
+
+```{r}
+library(readxl)
+dataset_coffee_4 <- read_excel("Downloads/dataset_4.xlsx")
+numerical_value <- c(23.93,60.39,12.93,2.76,81.02,14.72,2.89,1.38,44.84,37.83, 12.24,5.09)  
+dataset_coffee_4 <- dataset_coffee_4 %>% 
+  mutate(Percentage = numerical_value) %>% 
+  mutate(percent_50 = Percentage > 50)
+dataset_coffee_4
+```
+
+
+```{r}
+#Merged and Cleaned Dataset
+combined <- inner_join(caffeine_dataset_1, dataset_coffee_4,
+                       by = c("Total"="Total"))
+combined_total <- combined %>% 
+  mutate(Total = c(727, integer(32)))
+combined_total
+
+```
+```{r}
+write.csv(combined_total, "Documents/Info 201 Projects/caffine_consumption.csv", row.names=FALSE)
+```
+
+
+```{r}
+combined_total %>% 
+  group_by(Age) %>% 
+  ggplot(aes(Unit,Percentage, fill = factor(Variable)))+
+  geom_col(position="dodge")+
+  labs(title="Amount of Coffee Consumed vs. Percentage of Participants", x = "Units of Coffee")
+```
+
+
+```{r}
+#Summarization Dataframe
+summary_table <- combined %>%
+  filter(Variable %in% c('Intake frequency of regular coffee', 'Intake frequency of decaf coffee', 'Intake frequency of concentrated coffee')) %>%
+  group_by(Unit, Variable) %>%
+  summarise(
+    Avg_Participants = mean(Participants),
+    Avg_Percentage = mean(Percentage)
+  )
+summary_table
+```
+Our summary data frame displays some averages such as average participants and average percentage.
+
+```{r}
+sum(is.na(caffeine_dataset_1))
+dim(caffeine_dataset_1)
+```
+
+
+```{r}
+sum(is.na(caffeine_dataset_2))
+dim(caffeine_dataset_2)
+```
+
+
+```{r}
+sum(is.na(caffeine_dataset_3_clean))
+dim(caffeine_dataset_3_clean)
+```
+
+
+```{r}
+sum(is.na(dataset_coffee_4))
+dim(dataset_coffee_4)
+```
+
+
+```{r}
+sum(is.na(caffeine_dataset_5))
+dim(caffeine_dataset_5)
+```
+
+
+```{r}
+sum(is.na(combined_total))
+dim(is.na(combined_total))
+```
+
